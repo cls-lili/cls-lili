@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>崔丽硕 · 空间作品集 | 新媒体拍剪 · AI增长</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --glass-bg: rgba(20, 20, 28, 0.35);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --accent: #5eead4;
+      --accent2: #c084fc;
+      --radius: 32px;
+      --blur: 30px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #000;
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      cursor: none;
+    }
+
+    .cursor-outer {
+      position: fixed; width: 350px; height: 350px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(94, 234, 212, 0.15) 0%, rgba(192, 132, 252, 0.05) 40%, transparent 70%);
+      pointer-events: none; z-index: 9997;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+    }
+    .cursor-inner {
+      position: fixed; width: 60px; height: 60px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(94, 234, 212, 0.8) 30%, transparent 70%);
+      box-shadow: 0 0 30px rgba(94, 234, 212, 0.8), 0 0 80px rgba(192, 132, 252, 0.5);
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+    }
+    a, button, .card-project { cursor: none; }
+
+    /* 极光背景 */
+    .aurora {
+      position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none;
+    }
+    .aurora .orb {
+      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.55;
+      will-change: transform;
+    }
+    .orb-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(94, 234, 212, 0.8) 0%, transparent 70%);
+      top: -250px; left: -150px;
+      animation: floatA 22s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(192, 132, 252, 0.7) 0%, transparent 70%);
+      bottom: -200px; right: -100px;
+      animation: floatB 26s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.7) 0%, transparent 70%);
+      top: 60%; left: 70%;
+      animation: floatC 19s ease-in-out infinite alternate;
+    }
+    .orb-4 {
+      width: 450px; height: 450px;
+      background: radial-gradient(circle, rgba(244, 114, 182, 0.6) 0%, transparent 70%);
+      top: 10%; right: 20%;
+      animation: floatD 24s ease-in-out infinite alternate;
+    }
+    .orb-5 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(94, 234, 212, 0.6) 0%, transparent 70%);
+      bottom: 10%; left: 40%;
+      animation: floatA 20s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes floatA {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(80px, 50px) scale(1.2); }
+    }
+    @keyframes floatB {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-60px, -90px) scale(1.15); }
+    }
+    @keyframes floatC {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-50px, 60px) scale(1.25); }
+    }
+    @keyframes floatD {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(40px, -70px) scale(1.1); }
+    }
+
+    #main-content { }
+
+    .hero {
+      height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; position: relative;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; padding: 20px; }
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 700; letter-spacing: -2px;
+      line-height: 1.1; margin-bottom: 20px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 1.4rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px; }
+    .scroll-indicator {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      font-size: 0.9rem; color: var(--text-secondary); animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    .section { max-width: 1280px; margin: 0 auto; padding: 80px 24px; }
+    .section-title {
+      font-size: 2.5rem; font-weight: 600; margin-bottom: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1), box-shadow 0.4s, border-color 0.3s;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+      opacity: 0; transform: translateY(30px);
+    }
+    .card.visible { opacity: 1; transform: translateY(0); }
+    .card::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      background: linear-gradient(135deg, rgba(94,234,212,0.12), transparent 40%, transparent 60%, rgba(192,132,252,0.12));
+      opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 0;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover {
+      border-color: rgba(94, 234, 212, 0.45);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), 0 0 35px rgba(94,234,212,0.15), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .card-project { cursor: none; }
+
+    /* 内部作品网格 */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .work-item {
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: 0.3s;
+      cursor: none;
+    }
+    .work-item:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(94,234,212,0.3);
+    }
+    .work-thumb {
+      width: 100%; height: 160px; object-fit: cover;
+      border-radius: 16px; background: #111;
+      margin-bottom: 12px;
+    }
+    .work-title {
+      font-weight: 600; font-size: 1rem; margin-bottom: 6px;
+    }
+    .work-desc {
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;
+    }
+
+    .tag-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .tag {
+      background: rgba(255,255,255,0.08); padding: 6px 14px;
+      border-radius: 20px; font-size: 0.75rem; font-weight: 500;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-box { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 20px; }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 2.8rem; font-weight: 700; display: inline-block; }
+    .stat-unit { font-size: 1.5rem; font-weight: 500; }
+    .stat-label { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
+
+    .skill-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 8px; }
+    .skill-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 0; transition: width 1.5s ease; }
+
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(30px);
+      z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal.active { display: flex; }
+    .modal-box {
+      background: rgba(20,20,28,0.8); backdrop-filter: blur(40px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 40px;
+      padding: 40px; max-width: 900px; width: 100%;
+      position: relative; animation: modalIn 0.4s ease;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .modal-close {
+      position: absolute; top: 20px; right: 20px;
+      background: rgba(255,255,255,0.1); border: none; color: #fff;
+      width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem;
+      cursor: none;
+    }
+    .modal img { width: 100%; border-radius: 20px; margin: 16px 0; }
+
+    .footer { text-align: center; padding: 60px; color: var(--text-secondary); font-size: 0.85rem; }
+
+    .spark {
+      position: fixed; pointer-events: none; z-index: 9999;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent2);
+      animation: spark-fly 0.8s ease-out forwards;
+    }
+    @keyframes spark-fly {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .work-grid { grid-template-columns: 1fr; }
+      .cursor-outer, .cursor-inner { display: none; }
+      body { cursor: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor-outer" id="cursorOuter"></div>
+  <div class="cursor-inner" id="cursorInner"></div>
+
+  <div class="aurora">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+    <div class="orb orb-4"></div><div class="orb orb-5"></div>
+  </div>
+
+  <div id="main-content">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-content">
+        <h1>崔丽硕<span>·</span>作品集</h1>
+        <p>新媒体拍剪一体 · AI驱动内容生产 · 教育IP冷启动与增长</p>
+        <div class="tag-group" style="justify-content:center; margin-top:24px;">
+          <span class="tag">📸 摄影摄像</span>
+          <span class="tag">✂️ 专业剪辑</span>
+          <span class="tag">🤖 AI工业化</span>
+          <span class="tag">📈 IP增长</span>
+        </div>
+      </div>
+      <div class="scroll-indicator">向下滚动浏览作品 ↓</div>
+    </div>
+
+    <!-- ========== 天学网 ========== -->
+    <div class="section">
+      <div class="section-title">📘 北京天学网 · K12英语IP矩阵</div>
+
+      <!-- 子模块1：垂类账号产出（4图片） -->
+      <div class="card" style="margin-bottom: 32px;">
+        <h3 style="font-size:1.8rem; font-weight:600; background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">垂类账号产出</h3>
+        <div class="work-grid">
+          <div class="work-item card-project" data-title="英语写作IP" data-desc="紧追高考热点/单账号月均曝光100W+" data-image="images/vertical-1.jpg">
+            <img class="work-thumb" src="images/vertical-1.jpg" alt="英语写作IP">
+            <div class="work-title">英语写作IP</div>
+            <div class="work-desc">紧追高考热点/单账号月均曝光100W+</div>
+          </div>
+          <div class="work-item card-project" data-title="五个衍生系列" data-desc="单点爆款向结构化稳定产出转变" data-image="images/vertical-2.jpg">
+            <img class="work-thumb" src="images/vertical-2.jpg" alt="五个衍生系列">
+            <div class="work-title">五个衍生系列</div>
+            <div class="work-desc">单点爆款向结构化稳定产出转变</div>
+          </div>
+          <div class="work-item card-project" data-title="口语表达" data-desc="AI辅助字幕与转写，效率提升40%。" data-image="images/vertical-3.jpg">
+            <img class="work-thumb" src="images/vertical-3.jpg" alt="口语表达">
+            <div class="work-title">口语表达</div>
+            <div class="work-desc">AI辅助字幕与转写，效率提升40%。</div>
+          </div>
+          <div class="work-item card-project" data-title="AI自习室" data-desc="分镜设计、多设备拍摄、后期包装全链路。" data-image="images/vertical-4.jpg">
+            <img class="work-thumb" src="images/vertical-4.jpg" alt="AI自习室">
+            <div class="work-title">AI自习室</div>
+            <div class="work-desc">分镜设计、多设备拍摄、后期包装全链路。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 子模块2：热点结构化生产（5图片） -->
+      <div class="card" style="margin-bottom: 32px;">
+        <h3 style="font-size:1.8rem; font-weight:600; background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">热点结构化生产</h3>
+        <div class="work-grid">
+          <div class="work-item card-project" data-title="单账号自然流90W+" data-desc="月均曝光100W+，累计涨粉5500+" data-image="images/hotspot-1.jpg">
+            <img class="work-thumb" src="images/hotspot-1.jpg" alt="单账号自然流90W+">
+            <div class="work-title">单账号自然流90W+</div>
+            <div class="work-desc">月均曝光100W+，累计涨粉5500+</div>
+          </div>
+          <div class="work-item card-project" data-title="高考改革解读" data-desc="趋势内容，月均曝光100W+" data-image="images/hotspot-2.jpg">
+            <img class="work-thumb" src="images/hotspot-2.jpg" alt="高考改革解读">
+            <div class="work-title">高考改革解读</div>
+            <div class="work-desc">趋势内容，月均曝光100W+</div>
+          </div>
+          <div class="work-item card-project" data-title="英语学习价值+内容审美+干货落地" data-desc="单点爆款转稳定产出，单条月均10w＋曝光" data-image="images/hotspot-3.jpg">
+            <img class="work-thumb" src="images/hotspot-3.jpg" alt="英语学习价值+内容审美+干货落地">
+            <div class="work-title">英语学习价值+内容审美+干货落地</div>
+            <div class="work-desc">单点爆款转稳定产出，单条月均10w＋曝光</div>
+          </div>
+          <div class="work-item card-project" data-title="教育政策分析" data-desc="政策+教育焦虑，强传播力" data-image="images/hotspot-4.jpg">
+            <img class="work-thumb" src="images/hotspot-4.jpg" alt="教育政策分析">
+            <div class="work-title">教育政策分析</div>
+            <div class="work-desc">政策+教育焦虑，强传播力</div>
+          </div>
+          <div class="work-item card-project" data-title="教育政策实时解读" data-desc="新政落地拆解、升学与校园政策科普" data-image="images/hotspot-5.jpg">
+            <img class="work-thumb" src="images/hotspot-5.jpg" alt="教育政策实时解读">
+            <div class="work-title">教育政策实时解读</div>
+            <div class="work-desc">新政落地拆解、升学与校园政策科普</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 子模块3：B端/C端产品（4图片） -->
+      <div class="card">
+        <h3 style="font-size:1.8rem; font-weight:600; background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">B端/C端产品</h3>
+        <div class="work-grid">
+          <div class="work-item card-project" data-title="“1·3·3”中学英语学习中心育人体系" data-desc="26年创新实践 成果展示" data-image="images/product-1.jpg">
+            <img class="work-thumb" src="images/product-1.jpg" alt="“1·3·3”中学英语学习中心育人体系">
+            <div class="work-title">“1·3·3”中学英语学习中心育人体系</div>
+            <div class="work-desc">26年创新实践 成果展示</div>
+          </div>
+          <div class="work-item card-project" data-title="智能测评系统" data-desc="C端引导，提升产品使用率" data-image="images/product-2.jpg">
+            <img class="work-thumb" src="images/product-2.jpg" alt="智能测评系统">
+            <div class="work-title">智能测评系统</div>
+            <div class="work-desc">C端引导，提升产品使用率</div>
+          </div>
+          <div class="work-item card-project" data-title="家校沟通平台" data-desc="B端演示，操作流程清晰" data-image="images/product-3.jpg">
+            <img class="work-thumb" src="images/product-3.jpg" alt="家校沟通平台">
+            <div class="work-title">家校沟通平台</div>
+            <div class="work-desc">B端演示，操作流程清晰</div>
+          </div>
+          <div class="work-item card-project" data-title="学习报告功能" data-desc="C端功能亮点，提升用户粘性" data-image="images/product-4.jpg">
+            <img class="work-thumb" src="images/product-4.jpg" alt="学习报告功能">
+            <div class="work-title">学习报告功能</div>
+            <div class="work-desc">C端功能亮点，提升用户粘性</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 天学网数据增长动画 -->
+      <div class="card" style="margin-top: 32px;">
+        <h3 style="background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">📈 天学网阶段 · 数据增长</h3>
+        <div class="stat-box">
+          <div class="stat-item"><span class="stat-number" data-target="90">90</span><span class="stat-unit">W+</span><div class="stat-label">单条最高播放</div></div>
+          <div class="stat-item"><span class="stat-number" data-target="100">100</span><span class="stat-unit">W+</span><div class="stat-label">月均曝光</div></div>
+          <div class="stat-item"><span class="stat-number" data-target="5500">5500</span><span class="stat-unit">+</span><div class="stat-label">单条累计涨粉</div></div>
+          <div class="stat-item"><span class="stat-number" data-target="40">40</span><span class="stat-unit">%</span><div class="stat-label">剪辑效率提升</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 杭州印象 ========== -->
+    <div class="section">
+      <div class="section-title">🎨 杭州印象 · 艺考/摄影IP</div>
+
+      <!-- 作品展示（8图片） -->
+      <div class="card" style="margin-bottom: 32px;">
+        <h3 style="font-size:1.8rem; font-weight:600; background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">作品展示</h3>
+        <div class="work-grid" id="yinxiang-photos">
+          <script>
+            const photoGrid1 = document.getElementById('yinxiang-photos');
+            const titles = [
+              '学员成长 · 蒙太奇叙述',
+              '艺考IP矩阵 · 200W+点击',
+              '艺考IP矩阵 · 100W+点击',
+              '印象导演艺考IP',
+              '艺考的我们 · 情绪叙事',
+              '演出活动 · 课堂混剪',
+              '教师访谈 · 人物故事',
+              '艺考IP矩阵·结构化产出'
+            ];
+            const descs = [
+              '超1TB素材精选，视觉重构',
+              '单条点击200W+，总点赞10W+',
+              '单条点击100W+',
+              '专注影视素材二次创作与蒙太奇重构',
+              '人物故事+情绪叙事结构',
+              '累计跟进100+场活动拍摄',
+              '深度访谈，提升品牌温度',
+              '超1TB素材精选，视觉重构'
+            ];
+            for (let i = 0; i < 8; i++) {
+              const item = document.createElement('div');
+              item.className = 'work-item card-project';
+              item.setAttribute('data-title', titles[i]);
+              item.setAttribute('data-desc', descs[i]);
+              item.setAttribute('data-image', `images/yinxiang-${i+1}.jpg`);
+              item.innerHTML = `
+                <img class="work-thumb" src="images/yinxiang-${i+1}.jpg" alt="${titles[i]}">
+                <div class="work-title">${titles[i]}</div>
+                <div class="work-desc">${descs[i]}</div>
+              `;
+              photoGrid1.appendChild(item);
+            }
+          </script>
+        </div>
+      </div>
+
+      <!-- 摄影宣传（20张图片） -->
+      <div class="card">
+        <h3 style="font-size:1.8rem; font-weight:600; background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">摄影宣传</h3>
+        <div class="work-grid" id="yinxiang-photo">
+          <script>
+            const photoGrid2 = document.getElementById('yinxiang-photo');
+            for (let i = 0; i < 20; i++) {
+              const item = document.createElement('div');
+              item.className = 'work-item card-project';
+              item.setAttribute('data-title', `摄影作品 ${i+1}`);
+              item.setAttribute('data-desc', '最美艺考生 / 活动精修 / 公众号投票4W+');
+              item.setAttribute('data-image', `images/photo-${i+1}.jpg`);
+              item.innerHTML = `
+                <img class="work-thumb" src="images/photo-${i+1}.jpg" alt="摄影作品 ${i+1}">
+                <div class="work-title">摄影作品 ${i+1}</div>
+                <div class="work-desc">最美艺考生 / 活动精修</div>
+              `;
+              photoGrid2.appendChild(item);
+            }
+          </script>
+        </div>
+      </div>
+
+      <!-- 杭州印象商业结果 -->
+      <div class="card" style="margin-top: 32px;">
+        <h3 style="background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">📈 印象阶段 · 商业结果</h3>
+        <div class="stat-box">
+          <div class="stat-item"><span class="stat-number" data-target="60">60</span><span class="stat-unit">W+</span><div class="stat-label">伍月主播 Q3-Q4GMV突破</div></div>
+          <div class="stat-item"><span class="stat-number" data-target="80">80</span><span class="stat-unit">W+</span><div class="stat-label">印象音乐艺考张桐荣 Q3-Q4GMV环比增长</div></div>
+          <div class="stat-item"><span class="stat-number" data-target="50">50</span><span class="stat-unit">W+</span><div class="stat-label">杭州印象艺术培训单季度GMV突破</div></div>
+          <div class="stat-item"><span class="stat-number" data-target="4">4</span><span class="stat-unit">W+</span><div class="stat-label">单幅摄影作品公众号总投票量超</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI 技能栈 -->
+    <div class="section">
+      <div class="section-title">⚡ AI 技能栈 & 专业能力</div>
+      <div class="card" style="opacity:1; transform:none;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+          <div><div style="display:flex;justify-content:space-between;"><span>AI脚本/选题</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;"><span>标准化AI剪辑流程</span><span>92%</span></div><div class="skill-bar"><div class="skill-fill" data-width="92%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;"><span>剪辑能力</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;"><span>拍摄/灯光</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;"><span>直播搭建</span><span>88%</span></div><div class="skill-bar"><div class="skill-fill" data-width="88%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;"><span>数据复盘</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90%"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 联系 -->
+    <div class="section" style="text-align:center;">
+      <div class="card" style="display:inline-block; text-align:left; max-width:600px; opacity:1; transform:none;">
+        <h3 style="background:linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">📬 联系我</h3>
+        <p class="desc" style="color:var(--text-secondary);">📞 18157242535</p>
+        <p class="desc" style="color:var(--text-secondary);">📧 930746587@qq.com</p>
+        <p class="desc" style="color:var(--text-secondary);">🏫 山东艺术学院 · 摄影系2020级</p>
+      </div>
+    </div>
+
+    <div class="footer">© 2026 崔丽硕 · 拍摄·剪辑·AI驱动增长</div>
+  </div>
+
+  <!-- 作品弹窗 -->
+  <div class="modal" id="project-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close">✕</button>
+      <h2 id="modal-title"></h2>
+      <p class="desc" id="modal-desc" style="color:var(--text-secondary); margin:16px 0;"></p>
+      <div id="modal-media"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const outer = document.getElementById('cursorOuter');
+      const inner = document.getElementById('cursorInner');
+      document.addEventListener('mousemove', e => {
+        outer.style.left = e.clientX + 'px';
+        outer.style.top = e.clientY + 'px';
+        inner.style.left = e.clientX + 'px';
+        inner.style.top = e.clientY + 'px';
+      });
+
+      document.addEventListener('click', function(e) {
+        for (let i = 0; i < 12; i++) {
+          const spark = document.createElement('div');
+          spark.className = 'spark';
+          const angle = (i / 12) * Math.PI * 2;
+          const dist = 40 + Math.random() * 60;
+          spark.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+          spark.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+          spark.style.left = e.clientX + 'px';
+          spark.style.top = e.clientY + 'px';
+          spark.style.background = i % 2 === 0 ? '#5eead4' : '#c084fc';
+          spark.style.boxShadow = `0 0 15px ${i%2 ? '#c084fc' : '#5eead4'}`;
+          document.body.appendChild(spark);
+          spark.addEventListener('animationend', () => spark.remove());
+        }
+      });
+
+      // 直接显示主内容，无需密码验证
+      const main = document.getElementById('main-content');
+      main.style.display = 'block';
+      initAll();
+
+      function initAll() {
+        const cards = document.querySelectorAll('.card');
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+                bar.style.width = bar.dataset.width;
+              });
+              entry.target.querySelectorAll('.stat-number[data-target]').forEach(el => {
+                animateNumber(el, parseInt(el.dataset.target));
+              });
+            }
+          });
+        }, { threshold: 0.2 });
+        cards.forEach(c => observer.observe(c));
+
+        const modal = document.getElementById('project-modal');
+        document.body.addEventListener('click', function(e) {
+          const card = e.target.closest('.card-project');
+          if (!card) return;
+          e.stopPropagation();
+          document.getElementById('modal-title').textContent = card.dataset.title;
+          document.getElementById('modal-desc').textContent = card.dataset.desc;
+          let media = '';
+          if (card.dataset.image) {
+            media = `<img src="${card.dataset.image}" style="width:100%; border-radius:20px;" alt="${card.dataset.title}">`;
+          }
+          document.getElementById('modal-media').innerHTML = media;
+          modal.classList.add('active');
+        });
+
+        document.getElementById('modal-close').addEventListener('click', (e) => {
+          e.stopPropagation();
+          modal.classList.remove('active');
+        });
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) modal.classList.remove('active');
+        });
+      }
+
+      function animateNumber(el, target) {
+        let current = 0;
+        const step = target / 40;
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) { el.textContent = target; clearInterval(timer); }
+          else { el.textContent = Math.floor(current); }
+        }, 25);
+      }
+    })();
+  </script>
+</body>
+</html>
